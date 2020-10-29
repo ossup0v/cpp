@@ -131,6 +131,8 @@ int main(void)
 	/* Make the window's context current */
 	glfwMakeContextCurrent(window);
 
+	glfwSwapInterval(1);
+
 	if (glewInit() != GLEW_OK)
 		std::cout << "Error!" << std::endl;
 
@@ -171,13 +173,21 @@ int main(void)
 	
 	
 	float r = 0.0f;
+	float g = 0.0f;
+	float b = 0.0f;
+	float increment = 0.005f;
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window))
 	{
-		GLCall(glUniform4f(location, r, 0.0f, 0.0f, 0.0f));
+		GLCall(glUniform4f(location, r, g, b, 1.0f));
 		if (r > 0.9f)
-			r = 0.0f;
-		r += 0.1f;
+			increment = -increment;
+		else if (r < 0.0f)
+			increment = -increment;
+
+		r += increment;
+		g += -increment;
+		b += increment;
 		/* Render here */
 		GLCall(glClear(GL_COLOR_BUFFER_BIT));
 		//GL_UNSIGNED_INT
