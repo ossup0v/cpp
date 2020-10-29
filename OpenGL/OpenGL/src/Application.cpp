@@ -160,17 +160,24 @@ int main(void)
 	GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo));
 	GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint32_t) * 6, indices, GL_STATIC_DRAW));
 
-
-
 	ShaderProgramSource shaders = ParseShader("res/Shaders/Basic.shader");
 
 	uint32_t shader = CreateShader(shaders.VertexSource, shaders.FragmentSource);
 	GLCall(glUseProgram(shader));
-	GLCall(glBindBuffer(GL_ARRAY_BUFFER, 0));
-
+	
+	int location = glGetUniformLocation(shader, "u_Color");
+	
+	ASSERT(location != -1);
+	
+	
+	float r = 0.0f;
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window))
 	{
+		GLCall(glUniform4f(location, r, 0.0f, 0.0f, 0.0f));
+		if (r > 0.9f)
+			r = 0.0f;
+		r += 0.1f;
 		/* Render here */
 		GLCall(glClear(GL_COLOR_BUFFER_BIT));
 		//GL_UNSIGNED_INT
@@ -187,6 +194,6 @@ int main(void)
 
 	GLCall(glDeleteProgram(shader));
 
-	GLCall(glfwTerminate());
+	glfwTerminate();
 	return 0;
 }
